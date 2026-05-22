@@ -1,0 +1,14 @@
+/* global hexo */
+
+'use strict';
+
+hexo.extend.filter.register('theme_inject', function(injects) {
+  injects.postMarkdownBegin.raw('post-translate-toolbar',
+    '<div class="post-translate-toolbar" data-post-translate-root>' +
+      '<button type="button" class="post-translate-button" data-translate-button aria-live="polite">' +
+        'Translate to Chinese' +
+      '</button>' +
+      '<span class="post-translate-status" data-translate-status></span>' +
+    '</div>'
+  );
+});
