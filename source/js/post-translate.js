@@ -3,9 +3,7 @@
   const BUTTON_SELECTOR = '[data-translate-button]';
   const STATUS_SELECTOR = '[data-translate-status]';
   const CONTENT_SELECTOR = '.post-content .markdown-body';
-  // Point this to your deployed Cloudflare Worker URL.
-  // Deploy: cd workers && npx wrangler deploy translate-worker.js --name hexo-translate
-  const TRANSLATE_ENDPOINT = 'https://hexo-translate.YOUR_SUBDOMAIN.workers.dev';
+  const TRANSLATE_API = 'https://api.mymemory.translated.net/get';
 
   const state = {
     originalHtml: null,
@@ -47,18 +45,18 @@
     return nodes;
   }
 
-  /** Send all text chunks in one POST to the Worker, get translations back. */
-  async function translateBatch(texts, source, target) {
-    var response = await fetch(TRANSLATE_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ texts: texts, source: source, target: target })
-    });
-    if (!response.ok) throw new Error('Translation worker returned ' + response.status);
-    var result = await response.json();
-    return result.translated;
+  /** Translate one text string via MyMemory API (CORS-friendly, free, no key needed). */
+  async function translateText(text, source, target) {
+    var url = TRANSLATE_API + '?q=' + encodeURIComponent(text) +
+      '&langpair=' + encodeURIComponent(source + '|' + target);
+    var response = await fetch(url);
+    if (!response.ok) throw new Error('Translation API returned ' + response.status);
+    var data = await response.json();
+    if (data.responseStatus !== 200) throw new Error('Translation failed: ' + data.responseDetails);
+    return data.responseData.translatedText;
   }
 
+  /** Translate all text chunks with a concurrency limit (5 at a time). */
   async function translateHtml(html) {
     var container = document.createElement('div');
     container.innerHTML = html;
@@ -66,10 +64,16 @@
     if (textNodes.length === 0) return html;
 
     var texts = textNodes.map(function (n) { return n.textContent; });
-    var translated = await translateBatch(texts, 'en', 'zh-CN');
+    var CONCURRENCY = 5;
 
-    for (var i = 0; i < translated.length; i++) {
-      textNodes[i].textContent = translated[i];
+    for (var i = 0; i < texts.length; i += CONCURRENCY) {
+      var batch = texts.slice(i, i + CONCURRENCY);
+      var translated = await Promise.all(
+        batch.map(function (t) { return translateText(t, 'en', 'zh-CN'); })
+      );
+      for (var j = 0; j < translated.length; j++) {
+        textNodes[i + j].textContent = translated[j];
+      }
     }
     return container.innerHTML;
   }
