@@ -3,7 +3,9 @@
   const BUTTON_SELECTOR = '[data-translate-button]';
   const STATUS_SELECTOR = '[data-translate-status]';
   const CONTENT_SELECTOR = '.post-content .markdown-body';
-  const TRANSLATE_ENDPOINT = 'https://translate.googleapis.com/translate_a/single';
+  // Point this to your deployed Cloudflare Worker URL.
+  // Deploy: cd workers && npx wrangler deploy translate-worker.js --name hexo-translate
+  const TRANSLATE_ENDPOINT = 'https://hexo-translate.YOUR_SUBDOMAIN.workers.dev';
 
   const state = {
     originalHtml: null,
@@ -45,34 +47,30 @@
     return nodes;
   }
 
-  async function translateText(text, source, target) {
-    const url = TRANSLATE_ENDPOINT +
-      '?client=gtx&sl=' + encodeURIComponent(source) +
-      '&tl=' + encodeURIComponent(target) +
-      '&dt=t&q=' + encodeURIComponent(text);
-    const response = await fetch(url);
-    if (!response.ok) throw new Error('Translation API returned ' + response.status);
-    const data = await response.json();
-    return data[0].map(function (item) { return item[0]; }).join('');
+  /** Send all text chunks in one POST to the Worker, get translations back. */
+  async function translateBatch(texts, source, target) {
+    var response = await fetch(TRANSLATE_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ texts: texts, source: source, target: target })
+    });
+    if (!response.ok) throw new Error('Translation worker returned ' + response.status);
+    var result = await response.json();
+    return result.translated;
   }
 
   async function translateHtml(html) {
     var container = document.createElement('div');
     container.innerHTML = html;
     var textNodes = collectTextNodes(container);
-    var textChunks = textNodes.map(function (n) { return n.textContent; });
-    var BATCH_SIZE = 50;
+    if (textNodes.length === 0) return html;
 
-    for (var i = 0; i < textChunks.length; i += BATCH_SIZE) {
-      var batch = textChunks.slice(i, i + BATCH_SIZE);
-      var translated = await Promise.all(
-        batch.map(function (chunk) { return translateText(chunk, 'en', 'zh-CN'); })
-      );
-      for (var j = 0; j < translated.length; j++) {
-        textNodes[i + j].textContent = translated[j];
-      }
+    var texts = textNodes.map(function (n) { return n.textContent; });
+    var translated = await translateBatch(texts, 'en', 'zh-CN');
+
+    for (var i = 0; i < translated.length; i++) {
+      textNodes[i].textContent = translated[i];
     }
-
     return container.innerHTML;
   }
 
