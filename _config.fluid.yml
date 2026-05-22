@@ -84,3 +84,9 @@ social:
 footer:
   content: |
     &copy; 2026 My Blog. All rights reserved.
+
+custom_js:
+  - /js/post-translate.js
+
+custom_css:
+  - /css/post-translate.css

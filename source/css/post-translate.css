@@ -1,0 +1,35 @@
+.post-translate-toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 0 0 24px;
+  padding: 12px 16px;
+  border: 1px solid rgba(60, 72, 88, 0.16);
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.95), rgba(237, 242, 247, 0.9));
+}
+
+.post-translate-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  background: #1f6feb;
+  transition: opacity 0.15s;
+}
+
+.post-translate-button:hover {
+  opacity: 0.85;
+}
+
+.post-translate-button[disabled] {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.post-translate-status {
+  font-size: 0.95rem;
+  color: #51606d;
+}
