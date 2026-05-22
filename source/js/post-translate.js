@@ -45,15 +45,44 @@
     return nodes;
   }
 
-  /** Translate one text string via MyMemory API (CORS-friendly, free, no key needed). */
+  const MAX_QUERY_LEN = 500;
+
+  /** Split text into chunks of at most MAX_QUERY_LEN chars, breaking at sentence boundaries. */
+  function splitText(text) {
+    if (text.length <= MAX_QUERY_LEN) return [text];
+    var parts = [], i = 0;
+    while (i < text.length) {
+      var end = Math.min(i + MAX_QUERY_LEN, text.length);
+      // Try to break at a sentence boundary (.!?) for better translation quality.
+      if (end < text.length) {
+        var boundary = text.lastIndexOf('. ', end);
+        if (boundary > i + MAX_QUERY_LEN / 2) end = boundary + 1;
+        else {
+          boundary = text.lastIndexOf(' ', end);
+          if (boundary > i + MAX_QUERY_LEN / 2) end = boundary;
+        }
+      }
+      parts.push(text.slice(i, end));
+      i = end;
+    }
+    return parts;
+  }
+
+  /** Translate one text string via MyMemory API (CORS-friendly, free, no key needed).
+      Handles the 500-char query limit automatically by splitting. */
   async function translateText(text, source, target) {
-    var url = TRANSLATE_API + '?q=' + encodeURIComponent(text) +
-      '&langpair=' + encodeURIComponent(source + '|' + target);
-    var response = await fetch(url);
-    if (!response.ok) throw new Error('Translation API returned ' + response.status);
-    var data = await response.json();
-    if (data.responseStatus !== 200) throw new Error('Translation failed: ' + data.responseDetails);
-    return data.responseData.translatedText;
+    var chunks = splitText(text);
+    if (chunks.length === 0) return '';
+    var results = await Promise.all(chunks.map(async function(chunk) {
+      var url = TRANSLATE_API + '?q=' + encodeURIComponent(chunk) +
+        '&langpair=' + encodeURIComponent(source + '|' + target);
+      var response = await fetch(url);
+      if (!response.ok) throw new Error('API returned ' + response.status);
+      var data = await response.json();
+      if (data.responseStatus !== 200) throw new Error(data.responseDetails);
+      return data.responseData.translatedText;
+    }));
+    return results.join('');
   }
 
   /** Translate all text chunks with a concurrency limit (5 at a time). */
@@ -105,9 +134,9 @@
       setButtonState(button, 'Show English', false);
       setStatus(status, 'Translated to Chinese.');
     } catch (error) {
-      console.error('[post-translate]', error);
+      console.error('[post-translate]', error.name, error.message);
       setButtonState(button, 'Translate to Chinese', false);
-      setStatus(status, 'Translation is unavailable right now.');
+      setStatus(status, 'Translation unavailable (' + error.name + ')');
     } finally {
       state.busy = false;
     }
