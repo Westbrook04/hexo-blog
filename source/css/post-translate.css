@@ -1,35 +1,39 @@
 .post-translate-toolbar {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   align-items: center;
-  margin: 0 0 24px;
-  padding: 12px 16px;
-  border: 1px solid rgba(60, 72, 88, 0.16);
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(248, 250, 252, 0.95), rgba(237, 242, 247, 0.9));
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line-color, rgba(27,31,35,0.08));
+  border-radius: 6px;
+  background: var(--board-bg-color, #fff);
 }
 
 .post-translate-button {
-  border: 0;
-  border-radius: 999px;
-  padding: 8px 14px;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--line-color, rgba(27,31,35,0.12));
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.875rem;
+  line-height: 1.5;
   cursor: pointer;
-  color: #fff;
-  background: #1f6feb;
-  transition: opacity 0.15s;
+  color: var(--text-color, #333);
+  background: rgba(27,31,35,0.03);
+  transition: background 0.15s;
 }
 
 .post-translate-button:hover {
-  opacity: 0.85;
+  background: rgba(27,31,35,0.06);
 }
 
 .post-translate-button[disabled] {
-  opacity: 0.7;
+  opacity: 0.6;
   cursor: wait;
 }
 
 .post-translate-status {
-  font-size: 0.95rem;
-  color: #51606d;
+  font-size: 0.8125rem;
+  color: var(--sec-text-color, #999);
 }

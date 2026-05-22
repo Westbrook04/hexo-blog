@@ -113,9 +113,21 @@
     }
   }
 
+  /** Check if the post content already contains Chinese characters. */
+  function hasChinese(text) {
+    return /[一-鿿㐀-䶿]/.test(text);
+  }
+
   function init() {
     var els = getElements();
     if (!els.button || !els.content) return;
+
+    // Post is already in Chinese — hide toolbar, no need for translation.
+    if (hasChinese(els.content.textContent)) {
+      if (els.toolbar) els.toolbar.style.display = 'none';
+      return;
+    }
+
     els.button.addEventListener('click', handleClick);
   }
 
