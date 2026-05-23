@@ -103,3 +103,8 @@ theme: fluid
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+
+# 构建时自动压缩图片
+image_minifier:
+  enable: true
+  pngquant: false
