@@ -85,6 +85,10 @@ fun_features:
 social:
   - { title: "GitHub", icon: "iconfont icon-github-fill", link: "https://github.com/Westbrook04" }
 
+# 静态资源 CDN（覆盖默认旧版本）
+static_prefix:
+  mermaid: https://cdn.jsdelivr.net/npm/mermaid@11/dist/
+
 # 页脚
 footer:
   content: |
