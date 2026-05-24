@@ -35,6 +35,11 @@ post:
     specific: false
     options:
       theme: default
+      flowchart:
+        useMaxWidth: true
+        htmlLabels: true
+        curve: basis
+      securityLevel: loose
 
 # 归档页
 archive:

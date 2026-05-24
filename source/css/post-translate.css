@@ -37,3 +37,19 @@
   font-size: 0.8125rem;
   color: var(--sec-text-color, #999);
 }
+
+/* Mermaid 图表响应式适配 */
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.mermaid {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  text-align: center;
+  margin: 1.5rem 0;
+}
