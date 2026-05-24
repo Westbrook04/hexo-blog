@@ -2,10 +2,10 @@
 title: Vite 本地开发代理踩坑：localhost:3000 硬编码导致的 failed to fetch
 date: 2026-05-22
 tags:
-  - 技术
-  - Vite
-  - 前后端分离
-  - 调试记录
+- Vite
+- 前后端分离
+- 问题排查
+categories: 技术实践
 ---
 
 部署完公司的讯敏官网之后，需要在本地开发后台管理面板。后端在阿里云服务器上正常运行，本地用 Vite 启动 admin 面板，并通过 proxy 把 `/api` 请求转发到远程服务器。

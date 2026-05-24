@@ -4,10 +4,9 @@ date: 2026-05-23 14:30:00
 updated: 2026-05-23 14:30:00
 categories: 技术实践
 tags:
-  - Dotfiles
-  - 环境管理
-  - 效率工具
-  - Git
+- Dotfiles
+- 环境管理
+- Git
 ---
 
 ## 一、背景

@@ -2,6 +2,9 @@
 title: 树莓派 Linux 入门
 date: 2026-05-21 13:33:47
 tags:
+- 树莓派
+- Linux
+categories: 学习笔记
 ---
 
 # 树莓派Linux入门

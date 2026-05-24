@@ -4,10 +4,9 @@ date: 2026-05-23 14:00:00
 updated: 2026-05-23 14:00:00
 categories: 技术实践
 tags:
-  - Claude Code
-  - Hexo
-  - 自动化
-  - 效率工具
+- Claude Code
+- Hexo
+- 自动化
 ---
 
 ## 一、背景

@@ -2,12 +2,11 @@
 title: Fixing a Docker Compose Port Bind Failure in RAGFlow on Windows
 date: 2026-05-22 12:30:00
 tags:
-  - Docker
-  - RAGFlow
-  - Windows
-  - Debugging
-categories:
-  - Debugging
+- Docker
+- RAGFlow
+- Windows
+- Debugging
+categories: 技术实践
 ---
 
 ## The Problem

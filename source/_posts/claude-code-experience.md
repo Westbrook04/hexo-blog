@@ -1,9 +1,10 @@
 ---
 title: 用 Claude Code 写代码是什么体验
 date: 2026-05-15
+categories: 技术实践
 tags:
-  - 技术
-  - AI
+- Claude Code
+- AI
 ---
 
 AI 编程助手已经发展到了一个新高度。聊聊我用 Claude Code 这几周的真实感受，以及它如何改变了我的工作流程。

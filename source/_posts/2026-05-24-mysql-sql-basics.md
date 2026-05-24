@@ -4,10 +4,9 @@ date: 2026-05-24 16:00:00
 updated: 2026-05-24 16:00:00
 categories: 学习笔记
 tags:
-  - MySQL
-  - SQL
-  - 数据库
-  - Java
+- MySQL
+- SQL
+- 数据库
 ---
 
 ## SQL 概述

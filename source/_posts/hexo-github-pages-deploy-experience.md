@@ -2,9 +2,10 @@
 title: Hexo 博客部署到 GitHub Pages 的一次实战记录
 date: 2026-05-21
 tags:
-  - 技术
-  - Hexo
-  - GitHub Pages
+- Hexo
+- GitHub Pages
+- 部署复盘
+categories: 技术实践
 ---
 
 今天把自己的 Hexo 博客部署到 GitHub Pages，原本以为仓库已经传到 GitHub 上，博客地址应该就能直接访问，结果打开 `https://westbrook04.github.io/hexo-blog/` 时只看到了一个 `404` 页面。

@@ -2,8 +2,9 @@
 title: CSS Grid 布局学习笔记
 date: 2026-05-18
 tags:
-  - 笔记
-  - CSS
+- CSS
+- Grid
+categories: 学习笔记
 ---
 
 最近深入学习 CSS Grid 布局，发现它比 Flexbox 更适合做二维布局。这里总结一些核心概念和实用技巧。

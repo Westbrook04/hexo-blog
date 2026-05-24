@@ -2,13 +2,10 @@
 title: 双机党攻略：Mate 60 Pro + Mate 40 Pro 的高效用法与副卡决策
 date: 2026-05-23 22:00:00
 updated: 2026-05-23 22:00:00
-categories: 效率工具
+categories: 生活
 tags:
-  - 华为
-  - Mate60Pro
-  - Mate40Pro
-  - 效率工具
-  - 双手机
+- 华为
+- 双手机
 ---
 
 手头同时持有 Mate 60 Pro 和 Mate 40 Pro 两台旗舰，怎么搭配才能发挥 1+1 > 2 的效果？本文整理了几套经过验证的组合方案，以及最实际的副卡决策指南。

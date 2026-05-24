@@ -4,11 +4,11 @@ date: 2026-05-24 20:45:00
 updated: 2026-05-24 20:45:00
 categories: 学习笔记
 tags:
-  - Java Web
-  - Servlet
-  - JSP
-  - Cookie
-  - Session
+- Java Web
+- Servlet
+- JSP
+- Cookie
+- Session
 ---
 
 这次整理了一份 Java Web 考试的复习笔记，涵盖了 Tomcat、Servlet、JSP、Cookie、Session、EL 表达式等核心知识点，把原本零散的思维导图重新梳理成了结构化的学习资料。
