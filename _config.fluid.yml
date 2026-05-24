@@ -30,6 +30,11 @@ post:
   banner_img: /img/default.png
   banner_img_height: 60
   banner_mask_alpha: 0.3
+  mermaid:
+    enable: true
+    specific: false
+    options:
+      theme: default
 
 # 归档页
 archive:
@@ -90,8 +95,3 @@ custom_js:
 
 custom_css:
   - /css/post-translate.css
-
-# Mermaid 图表
-mermaid:
-  enable: true
-  theme: default
