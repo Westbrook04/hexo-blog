@@ -30,6 +30,9 @@ post:
   banner_img: /img/default.png
   banner_img_height: 60
   banner_mask_alpha: 0.3
+  comments:
+    enable: true
+    type: waline
   mermaid:
     enable: true
     specific: false
@@ -93,6 +96,18 @@ social:
 # 静态资源 CDN（覆盖默认旧版本）
 static_prefix:
   mermaid: https://cdn.jsdelivr.net/npm/mermaid@11/dist/
+
+# 评论
+waline:
+  serverURL: ''
+  path: window.location.pathname
+  meta: ['nick', 'mail', 'link']
+  requiredMeta: ['nick']
+  lang: 'zh-CN'
+  emoji: ['https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo']
+  dark: 'html[data-user-color-scheme="dark"]'
+  wordLimit: 0
+  pageSize: 10
 
 # 页脚
 footer:
