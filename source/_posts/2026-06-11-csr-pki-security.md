@@ -12,17 +12,17 @@ tags:
 
 ## 一、今天做了件事
 
-下午接到一个任务：给公司 14 台记录仪设备生成**CSR 文件**，用于向商密中心申请数字证书。
+下午接到一个任务：给一批终端设备生成**CSR 文件**，用于向 CA（证书颁发机构）申请数字证书。
 
-具体来说，就是每台设备生成一对 `.csr` + `.key` 文件，14 台就是 14 对。设备序列号从 `DSJ-YDTK4A10010064` 排到 `...0077`，一个循环搞定。
+具体来说，就是每台设备生成一对 `.csr` + `.key` 文件。设备序列号从 `SN-XXXXXXXXXXXX01` 排到 `...14`，一个循环搞定。
 
 如果你不太熟悉这个操作，它长这样：
 
 ```bash
 openssl req -new -sha256 -nodes \
-  -subj "/C=CN/ST=江西省/L=南昌市/O=江西讯敏信息技术有限公司/OU=技术部/CN=DSJ-YDTK4A10010064" \
-  -out "JXXMXX_01_DSJ-YDTK4A10010064.csr" \
-  -keyout "JXXMXX_01_DSJ-YDTK4A10010064.key"
+  -subj "/C=CN/ST=省份/L=城市/O=公司名称/OU=部门名称/CN=SN-XXXXXXXXXXXX01" \
+  -out "COMPANY_01_SN-XXXXXXXXXXXX01.csr" \
+  -keyout "COMPANY_01_SN-XXXXXXXXXXXX01.key"
 ```
 
 看起来就是一条命令而已，但背后涉及一整条**信息安全基础设施**——公钥密码体制、数字签名、PKI 体系。这篇博客就借这个机会，把这一整套东西串起来讲清楚。
@@ -68,15 +68,15 @@ OpenSSL 内部调用 RSA 算法，生成了一对数学上关联的密钥：
 
 ### 第二步：组装申请信息
 
-`-subj` 参数里的 `/C=CN/ST=江西省/L=南昌市/...` 被组装成 X.509 标准的 Distinguished Name（可分辨名称）：
+`-subj` 参数里的 `/C=CN/ST=省份/L=城市/...` 被组装成 X.509 标准的 Distinguished Name（可分辨名称）：
 
 ```text
-C  = CN        → 国家
-ST = 江西省     → 省份
-L  = 南昌市     → 城市
-O  = 江西讯敏… → 组织
-OU = 技术部     → 部门
-CN = DSJ-…     → 设备唯一标识
+C  = CN       → 国家
+ST = 省份      → 省份
+L  = 城市      → 城市
+O  = 公司名称  → 组织
+OU = 部门名称  → 部门
+CN = SN-XX…   → 设备唯一标识
 ```
 
 其中 **CN（Common Name）** 是最关键的字段，通常填入设备的唯一标识（IMEI、SN 码等），后续证书颁发时会以这个为准。
@@ -94,12 +94,12 @@ CA 收到 CSR 后，第一步就是**验证这个签名**——用 CSR 中携带
 14 台设备，当然不能一条一条手动跑。写个循环：
 
 ```bash
-for i in $(seq 64 77); do
-  seq_num=$(printf "%02d" $((i - 64 + 1)))
+for i in $(seq 1 14); do
+  seq_num=$(printf "%02d" $i)
   openssl req -new -sha256 -nodes \
-    -subj "/C=CN/ST=江西省/..." \
-    -out "csr/JXXMXX_${seq_num}_DSJ-YDTK4A100100${i}.csr" \
-    -keyout "key/JXXMXX_${seq_num}_DSJ-YDTK4A100100${i}.key"
+    -subj "/C=CN/ST=省份/L=城市/O=公司名称/OU=部门名称/CN=SN-XXXXXXXXXXXX${seq_num}" \
+    -out "COMPANY_${seq_num}_SN-XXXXXXXXXXXX${seq_num}.csr" \
+    -keyout "COMPANY_${seq_num}_SN-XXXXXXXXXXXX${seq_num}.key"
 done
 ```
 
@@ -107,7 +107,7 @@ done
 
 ```text
 req: subject name is expected to be in the format /type0=value0/type1=value1/...
-This name is not in that format: 'C:/Program Files/Git/C=CN/ST=江西省/...'
+This name is not in that format: 'C:/Program Files/Git/C=CN/ST=省份/...'
 ```
 
 原因是 **Git Bash（MSYS2 环境）** 把 `/C=CN` 中的 `/C` 误识别为 Windows 盘符 `C:`，自动转换成了 `C:/Program Files/Git/C=CN`，导致 OpenSSL 无法解析 subject。
@@ -126,7 +126,7 @@ MSYS2_ARG_CONV_EXCL="*" openssl req ...
 
 ### 1. 身份认证（Authentication）
 
-CSR 的 CN 字段声明了"我是设备 `DSJ-YDTK4A10010064`"，CA 在签发证书之前，会通过各种手段核实这个身份是否属实（比如核对设备采购清单、IMEI 登记信息等）。这个过程叫 **身份注册与验证**。
+CSR 的 CN 字段声明了"我是设备 `SN-XXXXXXXXXXXX01`"，CA 在签发证书之前，会通过各种手段核实这个身份是否属实（比如核对设备采购清单、IMEI 登记信息等）。这个过程叫 **身份注册与验证**。
 
 ### 2. 数据完整性（Integrity）
 
